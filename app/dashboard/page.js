@@ -1,5 +1,6 @@
 import { auth0 } from "@/lib/auth0";
 import { redirect } from "next/navigation";
+import DashboardClient from "@/components/dashboard/DashboardClient";
 
 export default async function Dashboard() {
   const session = await auth0.getSession();
@@ -8,11 +9,5 @@ export default async function Dashboard() {
     redirect("/");
   }
 
-  return (
-    <div>
-      <h1>Bienvenido, {session.user.name}</h1>
-      <p>{session.user.email}</p>
-      <a href="/auth/logout">Cerrar sesión</a>
-    </div>
-  );
+  return <DashboardClient user={session.user} />;
 }
