@@ -68,7 +68,7 @@ export default function LoginForm() {
 
   const handleStep2 = (e) => {
     e.preventDefault();
-    window.location.href = `/api/auth/login?screen_hint=signup&login_hint=${form.email}`;
+    window.location.href = `/auth/login?screen_hint=signup&login_hint=${form.email}`;
   };
 
   const handleGoogle = () => {
@@ -125,7 +125,7 @@ export default function LoginForm() {
                   </div>
                 </div>
                 <div className="flex justify-end">
-                  <button type="button" className="text-sm text-muted-foreground hover:text-foreground font-medium">
+                  <button type="button" onClick={() => window.location.href = '/auth/login?forgot=true'} className="text-sm text-muted-foreground hover:text-foreground font-medium">
                     ¿Olvidaste tu contraseña?
                   </button>
                 </div>
@@ -158,7 +158,7 @@ export default function LoginForm() {
               </Button>
               <p className="text-center text-sm text-muted-foreground">
                 ¿No tienes cuenta?{" "}
-                <button type="button" onClick={() => { setMode("register"); setStep(1); }}
+                <button type="button" onClick={() => { window.location.href = '/auth/login?screen_hint=signup'; }}
                   className="text-foreground hover:text-foreground/80 font-semibold underline">
                   Regístrate
                 </button>
