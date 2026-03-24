@@ -6,7 +6,7 @@ export default async function Home() {
   const session = await auth0.getSession();
 
   if (session) {
-    redirect("/check-perfil");
+    redirect("/dashboard");
   }
 
   return <LoginForm />;

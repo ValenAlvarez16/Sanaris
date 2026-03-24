@@ -14,9 +14,8 @@ export default function CheckPerfil() {
           return;
         }
         const user = await res.json();
-        const key = `perfil_completo_${user.email}`;
-        const completo = localStorage.getItem(key);
-        if (completo) {
+
+        if (user.user_metadata?.perfil_completo) {
           router.replace("/dashboard");
         } else {
           router.replace("/completar-perfil");
@@ -28,5 +27,5 @@ export default function CheckPerfil() {
     check();
   }, []);
 
-  return null;
+  return <p className="text-center mt-20 text-muted-foreground">Cargando...</p>;
 }

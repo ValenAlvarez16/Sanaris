@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Activity, CreditCard, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,19 +10,45 @@ const ROLES = ["Médico", "Enfermero", "Administrador"];
 const DOC_TYPES = ["Cédula de ciudadanía", "Cédula de extranjería", "Pasaporte"];
 
 export default function CompletarPerfil() {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [form, setForm] = useState({ tipoDoc: "", numeroDoc: "", rol: "" });
+  const [loading, setLoading] = useState(false);
+
+  const userId = searchParams.get("user_id");
+  const state = searchParams.get("state");
+
+  useEffect(() => {
+    // Si no hay parámetros de Auth0, no es un redirect válido
+    if (!userId || !state) {
+      router.replace("/");
+    }
+  }, [userId, state]);
+
   const update = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/auth/profile");
-    const user = await res.json();
-    const key = `perfil_completo_${user.email}`;
-    localStorage.setItem(key, "true");
-    localStorage.setItem(`perfil_datos_${user.email}`, JSON.stringify(form));
-    router.replace("/dashboard");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/completar-perfil", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, form, state }),
+      });
+
+      if (!res.ok) throw new Error("Error guardando perfil");
+
+      const { continueUrl } = await res.json();
+      window.location.href = continueUrl;
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
   };
+
+  if (!userId || !state) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6" style={{ background: "hsl(220, 20%, 10%)" }}>
@@ -63,8 +89,8 @@ export default function CompletarPerfil() {
               {ROLES.map(r => <option key={r} value={r} className="bg-gray-900">{r}</option>)}
             </select>
           </div>
-          <Button type="submit" className="w-full h-12 font-semibold text-base gap-2">
-            Continuar <ArrowRight className="w-4 h-4" />
+          <Button type="submit" disabled={loading} className="w-full h-12 font-semibold text-base gap-2">
+            {loading ? "Guardando..." : (<>Continuar <ArrowRight className="w-4 h-4" /></>)}
           </Button>
         </form>
       </div>
