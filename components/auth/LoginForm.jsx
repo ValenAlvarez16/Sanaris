@@ -83,8 +83,8 @@ export default function LoginForm() {
   return (
     <div className="min-h-screen flex">
       <LeftPanel />
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-background">
-        <div className="w-full max-w-md space-y-8">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-background overflow-y-auto">
+        <div className="w-full max-w-md space-y-8 py-8">
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3">
@@ -138,7 +138,7 @@ export default function LoginForm() {
                   <div className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-3 text-muted-foreground">o continuar con</span>
+                  <span className="bg-background px-3 text-muted-foreground">o continuar con</span>
                 </div>
               </div>
               <Button type="button" variant="outline" onClick={handleGoogle} className="w-full h-12 gap-2">
